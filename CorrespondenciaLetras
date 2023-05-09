@@ -1,0 +1,64 @@
+import java.util.*;
+
+public class CorrespondenciaLetras {
+    
+    public static void main(String[] args) {
+        
+        String abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String cadena = "";
+        String[] secuenciasProhibidas = {"STAR", "THE", "AL", "DE"};
+        boolean cumpleReglas = false;
+        
+        // Generar la cadena hasta que cumpla las reglas
+        while (!cumpleReglas) {
+            // Generar una lista aleatoria con todas las letras del alfabeto
+            List<Character> letrasAleatorias = new ArrayList<>();
+            for (char c : abecedario.toCharArray()) {
+                letrasAleatorias.add(c);
+            }
+            Collections.shuffle(letrasAleatorias);
+            
+            // Construir la cadena con la correspondencia de letras
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < abecedario.length(); i++) {
+                char letraOriginal = abecedario.charAt(i);
+                char letraCodificada = letrasAleatorias.get(i);
+                sb.append(letraCodificada);
+                // Verificar si hay una secuencia prohibida en la cadena
+                for (String secuencia : secuenciasProhibidas) {
+                    if (sb.indexOf(secuencia) != -1) {
+                        sb = new StringBuilder();
+                        break;
+                    }
+                }
+                // Verificar si hay una única consonante entre dos vocales
+                if (sb.length() >= 3) {
+                    String ultimasTresLetras = sb.substring(sb.length() - 3);
+                    if (esConsonante(ultimasTresLetras.charAt(0))
+                            && esVocal(ultimasTresLetras.charAt(1))
+                            && esConsonante(ultimasTresLetras.charAt(2))) {
+                        sb.deleteCharAt(sb.length() - 1);
+                    }
+                }
+            }
+            cadena = sb.toString();
+            cumpleReglas = true;
+        }
+        
+        // Mostrar la correspondencia de letras generada
+        for (int i = 0; i < abecedario.length(); i++) {
+            char letraOriginal = abecedario.charAt(i);
+            char letraCodificada = cadena.charAt(i);
+            System.out.println(letraOriginal + " -> " + letraCodificada);
+        }
+    }
+    
+    private static boolean esVocal(char letra) {
+        return letra == 'A' || letra == 'E' || letra == 'I' || letra == 'O' || letra == 'U';
+    }
+    
+    private static boolean esConsonante(char letra) {
+        return !esVocal(letra);
+    }
+    
+}
